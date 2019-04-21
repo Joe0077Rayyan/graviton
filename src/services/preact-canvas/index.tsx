@@ -21,6 +21,7 @@ import localStateSubscribe from "../state/local-state-subscribe.js";
 import BottomBar from "./components/bottom-bar";
 import deferred from "./components/deferred";
 import Intro from "./components/intro/index.js";
+import Settings from "./components/settings";
 import { game as gameClassName, main } from "./style.css";
 
 interface Props {
@@ -32,6 +33,7 @@ interface State {
   stateService?: Remote<StateService>;
   dangerMode: boolean;
   texturesReady: boolean;
+  settingsOpen: boolean;
 }
 
 export type GameChangeCallback = (stateChange: GameStateChange) => void;
@@ -53,7 +55,8 @@ const texturePromise = import("../../rendering/animation").then(m =>
 class PreactService extends Component<Props, State> {
   state: State = {
     dangerMode: false,
-    texturesReady: false
+    texturesReady: false,
+    settingsOpen: false
   };
 
   private _gameChangeSubscribers = new Set<GameChangeCallback>();
@@ -101,7 +104,11 @@ class PreactService extends Component<Props, State> {
           dangerMode={game ? dangerMode : false}
         />
         {mainComponent}
-        <BottomBar onFullscreenClick={this._onFullscreenClick} />
+        <BottomBar
+          onFullscreenClick={this._onFullscreenClick}
+          onSettingsClick={this._onSettingsClick}
+        />
+        <Settings open={this.state.settingsOpen} />
       </div>
     );
   }
@@ -124,6 +131,11 @@ class PreactService extends Component<Props, State> {
   @bind
   private _onFullscreenClick() {
     document.documentElement.requestFullscreen();
+  }
+
+  @bind
+  private _onSettingsClick() {
+    this.setState({ settingsOpen: !this.state.settingsOpen });
   }
 
   @bind

@@ -37,7 +37,9 @@ interface State {
   settingsOpen: boolean;
 }
 
+// install inert polyfill for A11y
 initInert();
+
 export type GameChangeCallback = (stateChange: GameStateChange) => void;
 
 // tslint:disable-next-line:variable-name
@@ -102,15 +104,17 @@ class PreactService extends Component<Props, State> {
 
     return (
       <div class={gameClassName}>
-        <Nebula
-          loading={() => <div />}
-          dangerMode={game ? dangerMode : false}
-        />
-        {mainComponent}
-        <BottomBar
-          onFullscreenClick={this._onFullscreenClick}
-          onSettingsClick={this._onSettingsClick}
-        />
+        <div>
+          <Nebula
+            loading={() => <div />}
+            dangerMode={game ? dangerMode : false}
+          />
+          {mainComponent}
+          <BottomBar
+            onFullscreenClick={this._onFullscreenClick}
+            onSettingsClick={this._onSettingsClick}
+          />
+        </div>
         <Settings
           onCloseClicked={this._onSettingsCloseClicked}
           open={settingsOpen}

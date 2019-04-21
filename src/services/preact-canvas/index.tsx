@@ -35,6 +35,7 @@ interface State {
   dangerMode: boolean;
   texturesReady: boolean;
   settingsOpen: boolean;
+  motionPreference: boolean;
 }
 
 // install inert polyfill for A11y
@@ -60,7 +61,8 @@ class PreactService extends Component<Props, State> {
   state: State = {
     dangerMode: false,
     texturesReady: false,
-    settingsOpen: false
+    settingsOpen: false,
+    motionPreference: true // get preference from idb
   };
   private previousFocus: HTMLElement | null = null;
 
@@ -73,7 +75,14 @@ class PreactService extends Component<Props, State> {
 
   render(
     _props: Props,
-    { game, stateService, dangerMode, texturesReady, settingsOpen }: State
+    {
+      game,
+      stateService,
+      dangerMode,
+      texturesReady,
+      settingsOpen,
+      motionPreference
+    }: State
   ) {
     let mainComponent: VNode;
 
@@ -119,6 +128,8 @@ class PreactService extends Component<Props, State> {
         <Settings
           onCloseClicked={this._onSettingsCloseClicked}
           open={settingsOpen}
+          motion={motionPreference}
+          onMotionPrefChange={this._onMotionPrefChange}
         />
       </div>
     );
@@ -133,6 +144,12 @@ class PreactService extends Component<Props, State> {
     if (event.key === "Escape" && this.state.settingsOpen) {
       this._onSettingsClick();
     }
+  }
+
+  @bind
+  private _onMotionPrefChange() {
+    // TODO: store this preference in idb
+    this.setState({ motionPreference: !this.state.motionPreference });
   }
 
   @bind

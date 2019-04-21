@@ -21,7 +21,7 @@ import localStateSubscribe from "../state/local-state-subscribe.js";
 import BottomBar from "./components/bottom-bar";
 import deferred from "./components/deferred";
 import Intro from "./components/intro/index.js";
-import Settings from "./components/settings";
+import Settings from "./components/Settings";
 import { game as gameClassName, main } from "./style.css";
 
 interface Props {
@@ -58,6 +58,7 @@ class PreactService extends Component<Props, State> {
     texturesReady: false,
     settingsOpen: false
   };
+  private previousFocus: HTMLElement | null = null;
 
   private _gameChangeSubscribers = new Set<GameChangeCallback>();
 
@@ -68,7 +69,7 @@ class PreactService extends Component<Props, State> {
 
   render(
     _props: Props,
-    { game, stateService, dangerMode, texturesReady }: State
+    { game, stateService, dangerMode, texturesReady, settingsOpen }: State
   ) {
     let mainComponent: VNode;
 
@@ -108,7 +109,10 @@ class PreactService extends Component<Props, State> {
           onFullscreenClick={this._onFullscreenClick}
           onSettingsClick={this._onSettingsClick}
         />
-        <Settings open={this.state.settingsOpen} />
+        <Settings
+          onCloseClicked={this._onSettingsCloseClicked}
+          open={settingsOpen}
+        />
       </div>
     );
   }
@@ -134,7 +138,17 @@ class PreactService extends Component<Props, State> {
   }
 
   @bind
+  private _onSettingsCloseClicked() {
+    this._onSettingsClick();
+  }
+
+  @bind
   private _onSettingsClick() {
+    if (this.state.settingsOpen) {
+      this.previousFocus!.focus();
+    } else {
+      this.previousFocus = document.activeElement as HTMLElement;
+    }
     this.setState({ settingsOpen: !this.state.settingsOpen });
   }
 

@@ -34,6 +34,7 @@ export interface Props {
   onDangerModeChange: (v: boolean) => void;
   dangerMode: boolean;
   toRevealTotal: number;
+  inert?: boolean;
 }
 
 interface State {
@@ -71,14 +72,15 @@ export default class Game extends Component<Props, State> {
       height,
       gameChangeSubscribe,
       gameChangeUnsubscribe,
-      toRevealTotal
+      toRevealTotal,
+      inert
     }: Props,
     { playMode, toReveal, completeTime, bestTime }: State
   ) {
     const timerRunning = playMode === PlayMode.Playing;
 
     return (
-      <div class={gameClass}>
+      <div class={gameClass} inert={inert}>
         <TopBar
           timerRunning={timerRunning}
           toReveal={toReveal}

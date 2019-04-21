@@ -22,7 +22,7 @@ import localStateSubscribe from "../state/local-state-subscribe.js";
 import BottomBar from "./components/bottom-bar";
 import deferred from "./components/deferred";
 import Intro from "./components/intro/index.js";
-import Settings from "./components/Settings";
+import Settings from "./components/settings";
 import { game as gameClassName, main } from "./style.css";
 
 interface Props {
@@ -82,6 +82,7 @@ class PreactService extends Component<Props, State> {
         <Intro
           onStartGame={this._onStartGame}
           loading={!stateService || !texturesReady}
+          inert={settingsOpen ? true : false}
         />
       );
     } else {
@@ -98,13 +99,13 @@ class PreactService extends Component<Props, State> {
           stateService={stateService!}
           dangerMode={dangerMode}
           onDangerModeChange={this._onDangerModeChange}
+          inert={settingsOpen ? true : false}
         />
       );
     }
 
     return (
       <div class={gameClassName}>
-        {/* <div inert={settingsOpen ? true : false}> */}
         <Nebula
           loading={() => <div />}
           dangerMode={game ? dangerMode : false}
@@ -113,8 +114,8 @@ class PreactService extends Component<Props, State> {
         <BottomBar
           onFullscreenClick={this._onFullscreenClick}
           onSettingsClick={this._onSettingsClick}
+          inert={settingsOpen ? true : false}
         />
-        {/* </div> */}
         <Settings
           onCloseClicked={this._onSettingsCloseClicked}
           open={settingsOpen}

@@ -94,6 +94,7 @@ type PresetName = keyof typeof presets;
 export interface Props {
   onStartGame: (width: number, height: number, mines: number) => void;
   loading: boolean;
+  inert: boolean;
 }
 
 interface State {
@@ -126,11 +127,11 @@ export default class Intro extends Component<Props, State> {
   }
 
   render(
-    { loading }: Props,
+    { loading, inert }: Props,
     { width, height, mines, presetName, longLoad }: State
   ) {
     return (
-      <div class={introStyle}>
+      <div class={introStyle} inert={inert}>
         <TopBar titleOnly />
         <form onSubmit={this._startGame} class={startFormStyle}>
           <div class={settingsRowStyle}>

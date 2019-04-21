@@ -104,23 +104,34 @@ class PreactService extends Component<Props, State> {
 
     return (
       <div class={gameClassName}>
-        <div inert={settingsOpen ? true : false}>
-          <Nebula
-            loading={() => <div />}
-            dangerMode={game ? dangerMode : false}
-          />
-          {mainComponent}
-          <BottomBar
-            onFullscreenClick={this._onFullscreenClick}
-            onSettingsClick={this._onSettingsClick}
-          />
-        </div>
+        {/* <div inert={settingsOpen ? true : false}> */}
+        <Nebula
+          loading={() => <div />}
+          dangerMode={game ? dangerMode : false}
+        />
+        {mainComponent}
+        <BottomBar
+          onFullscreenClick={this._onFullscreenClick}
+          onSettingsClick={this._onSettingsClick}
+        />
+        {/* </div> */}
         <Settings
           onCloseClicked={this._onSettingsCloseClicked}
           open={settingsOpen}
         />
       </div>
     );
+  }
+
+  componentDidMount() {
+    window.addEventListener("keyup", this._onKeyUp);
+  }
+
+  @bind
+  private _onKeyUp(event: KeyboardEvent) {
+    if (event.key === "Escape" && this.state.settingsOpen) {
+      this._onSettingsClick();
+    }
   }
 
   @bind

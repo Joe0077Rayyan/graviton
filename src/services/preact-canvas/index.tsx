@@ -19,6 +19,10 @@ import initInert from "../../utils/inert";
 import { GameType } from "../state";
 import StateService from "../state/index.js";
 import localStateSubscribe from "../state/local-state-subscribe.js";
+import {
+  getMotionPreference,
+  setMotionPreference
+} from "../state/motion-preference";
 import BottomBar from "./components/bottom-bar";
 import deferred from "./components/deferred";
 import Intro from "./components/intro/index.js";
@@ -62,7 +66,7 @@ class PreactService extends Component<Props, State> {
     dangerMode: false,
     texturesReady: false,
     settingsOpen: false,
-    motionPreference: true // get preference from idb
+    motionPreference: true
   };
   private previousFocus: HTMLElement | null = null;
 
@@ -148,8 +152,9 @@ class PreactService extends Component<Props, State> {
 
   @bind
   private _onMotionPrefChange() {
-    // TODO: store this preference in idb
-    this.setState({ motionPreference: !this.state.motionPreference });
+    setMotionPreference(!this.state.motionPreference).then(newPreference => {
+      this.setState({ motionPreference: newPreference });
+    });
   }
 
   @bind
@@ -203,6 +208,9 @@ class PreactService extends Component<Props, State> {
 
     const stateService = await props.stateServicePromise;
     this.setState({ stateService });
+
+    const motionPreference = await getMotionPreference();
+    this.setState({ motionPreference });
 
     localStateSubscribe(stateService, stateChange => {
       if ("game" in stateChange) {
